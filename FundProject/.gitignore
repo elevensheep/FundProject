@@ -1,0 +1,11 @@
+# Visual Studio 관련
+.vs/
+*.user
+*.suo
+
+# 빌드 출력물
+bin/
+obj/
+
+# 환경 변수 파일
+.env

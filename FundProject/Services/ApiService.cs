@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using FundProject.Models;
+using DotNetEnv;
+using System.IO;
 
 namespace FundProject.Services
 {
@@ -14,9 +16,12 @@ namespace FundProject.Services
 
         public async Task<List<StockPrice>> FetchStockPricesAsync(string date)
         {
-            string serviceKey = "xEFEUOAg62US8nyibIKNbWueC%2FwYsIe5Fkvxwna1ch6jUTkCbqtPMeK%2Fx0JaOJV9co4oPrcElD5mImFdIXOGdA%3D%3D";
+            DotNetEnv.Env.Load(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../.env"));
+
+            var connectionString = Environment.GetEnvironmentVariable("API_KEY");
+
             string url = $"https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo?" +
-                         $"serviceKey={serviceKey}" +
+                         $"serviceKey={connectionString}" +
                          $"&numOfRows=1000" +
                          $"&pageNo=1" +
                          $"&resultType=xml" +
