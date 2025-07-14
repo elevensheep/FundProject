@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DotNetEnv;
+using System.IO;
 
 namespace FundProject.Services
 {
@@ -14,7 +16,17 @@ namespace FundProject.Services
 
         public MongoService()
         {
-            var client = new MongoClient("mongodb+srv://leehj:qwertyasdfzxcv@cluster.d2zx1ey.mongodb.net/chaincar?retryWrites=true&w=majority");
+            DotNetEnv.Env.Load(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../.env"));
+
+            var connectionString = Environment.GetEnvironmentVariable("MONGO_URI");
+
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException("MongoDB 연결 문자열(MONGO_URI)이 환경 변수에 설정되어 있지 않습니다. .env 파일을 확인하세요.");
+                // 또는 로그 출력 후 return 처리 등도 가능
+            }
+
+            var client = new MongoClient(connectionString);
             _database = client.GetDatabase("StockDB");
             _stockCollection = _database.GetCollection<StockPrice>("StocksWithPrices");
         }
